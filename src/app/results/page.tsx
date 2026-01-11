@@ -16,12 +16,12 @@ import {
   ChevronRight,
   Maximize2
 } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-export default function ResultsPage() {
+function ResultsContent() {
   const searchParams = useSearchParams();
   const generationId = searchParams.get("id");
   
@@ -337,5 +337,19 @@ export default function ResultsPage() {
         )}
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="h-12 w-12 animate-spin text-zinc-700" />
+        </div>
+      </DashboardLayout>
+    }>
+      <ResultsContent />
+    </Suspense>
   );
 }
